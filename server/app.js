@@ -7,6 +7,7 @@ import logger from "morgan";
 import db from "./conf/db";
 import indexRouter from "./routes/index";
 import todosRouter from "./routes/todos";
+import "./models";
 
 db.authenticate()
   .then(() => {
@@ -15,6 +16,8 @@ db.authenticate()
   .catch(err => {
     console.error("Unable to connect to the database:", err);
   });
+
+db.sync({ force: true });
 
 const app = express();
 
