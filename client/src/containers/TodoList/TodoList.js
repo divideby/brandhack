@@ -3,6 +3,13 @@ import styled from "styled-components";
 import { TextField, Button } from "../../components";
 
 class TodoList extends Component {
+  constructor(props) {
+    super(props);
+    fetch("http://localhost:3000/todos")
+      .then(response => response.json())
+      .then(result => console.log("result", result));
+  }
+
   render() {
     const todos = [1, 2, 3, 4, 5];
     return (

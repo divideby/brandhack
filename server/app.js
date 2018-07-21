@@ -1,13 +1,22 @@
 import createError from "http-errors";
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
 
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+import db from "./conf/db";
+import indexRouter from "./routes/index";
+import todosRouter from "./routes/todos";
 
-var indexRouter = require("./routes/index");
+db.authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch(err => {
+    console.error("Unable to connect to the database:", err);
+  });
 
-var app = express();
+const app = express();
 
 app.disable("etag");
 
@@ -28,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
  * API
  */
 app.use("/", indexRouter);
+app.use("/todos", todosRouter);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
