@@ -1,28 +1,54 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { TextField, Button } from "../../components";
+import { request } from "../../utils";
 
 class TodoList extends Component {
   constructor(props) {
     super(props);
-    fetch("http://localhost:3000/todos")
-      .then(response => response.json())
-      .then(result => console.log("result", result));
+    this.state = {
+      todos: [],
+      newTitle: ""
+    };
+    this.getList();
+  }
+
+  getList() {
+    request("/todos/list").then(({ todos }) => this.setState({ todos }));
+  }
+
+  addTodo() {
+    const { newTitle } = this.state;
+    request("/todos/add", { title: newTitle }).then(() => {
+      this.setState({ newTitle: "" });
+      this.getList();
+    });
+  }
+
+  deleteTodo(id) {
+    request("/todos/delete", { id }).then(() => {
+      this.getList();
+    });
   }
 
   render() {
-    const todos = [1, 2, 3, 4, 5];
+    const { todos, newTitle } = this.state;
     return (
       <TodoListView>
-        {todos.map(todo => (
+        {todos.map(({ title, id }) => (
           <Todo>
-            <TodoTitle>{todo}</TodoTitle>
-            <Button label={"Удалить"} />
+            <TodoTitle>{title}</TodoTitle>
+            <Button onClick={() => this.deleteTodo(id)} label={"Удалить"} />
           </Todo>
         ))}
         <NewTodo>
-          <TextField style={{ flex: 1 }} placeholder="Купить пива" />
-          <Button label={"Добавить"} />
+          <TextField
+            value={newTitle}
+            onChange={event => this.setState({ newTitle: event.target.value })}
+            style={{ flex: 1 }}
+            placeholder="Купить пива"
+          />
+          <Button onClick={() => this.addTodo()} label={"Добавить"} />
         </NewTodo>
       </TodoListView>
     );

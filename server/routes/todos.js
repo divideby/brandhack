@@ -3,10 +3,12 @@ import { Todo } from "../models";
 
 const router = express.Router();
 
-/* GET home page. */
 router.post("/list", function(req, res, next) {
   Todo.findAll().then(todos => {
-    res.json({ todos });
+    res.json({
+      status: "success",
+      todos
+    });
   });
 });
 
@@ -20,8 +22,7 @@ router.post("/add", function(req, res, next) {
 router.post("/delete", function(req, res, next) {
   const { id } = req.body;
   Todo.findOne({ id }).then(todo => {
-    todo.destroy();
-    res.json({ status: "succes" });
+    todo.destroy().then(() => res.json({ status: "succes" }));
   });
 });
 

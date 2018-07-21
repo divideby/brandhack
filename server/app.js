@@ -17,7 +17,7 @@ db.authenticate()
     console.error("Unable to connect to the database:", err);
   });
 
-db.sync({ force: true });
+db.sync();
 
 const app = express();
 
