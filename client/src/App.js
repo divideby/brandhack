@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
-import Button from "./components/Button";
-import TextField from "./components/TextField";
+import { TodoList } from "./containers";
 
 class App extends Component {
   state = {
@@ -11,11 +10,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Button
-          onClick={() => this.setState({ name: "vasya" })}
-          label={"Click me"}
-        />
-        <TextField placeholder={"add todo"} />
+        <TodoList />
       </div>
     );
   }
